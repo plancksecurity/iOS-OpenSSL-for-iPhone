@@ -495,34 +495,44 @@ if [ ${#OPENSSLCONF_ALL[@]} -gt 1 ]; then
     case "${OPENSSLCONF_CURRENT}" in
       *_ios_x86_64.h)
         DEFINE_CONDITION1="TARGET_OS_IOS && TARGET_OS_SIMULATOR && TARGET_CPU_X86_64"
+        DEFINE_CONDITION2=""
       ;;
       *_ios_i386.h)
         DEFINE_CONDITION1="TARGET_OS_IOS && TARGET_OS_SIMULATOR && TARGET_CPU_X86"
+        DEFINE_CONDITION2=""
       ;;
       *_ios_arm64.h)
         DEFINE_CONDITION1="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM64"
+        DEFINE_CONDITION2=""
       ;;
       *_ios_arm64e.h)
         DEFINE_CONDITION1="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM64E"
+        DEFINE_CONDITION2=""
       ;;
       *_ios_armv7s.h)
         DEFINE_CONDITION1="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM && defined(__ARM_ARCH_7S__)"
+        DEFINE_CONDITION2=""
       ;;
       *_ios_armv7.h)
         DEFINE_CONDITION1="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM && !defined(__ARM_ARCH_7S__)"
+        DEFINE_CONDITION2=""
       ;;
       *_catalyst_x86_64.h)
         DEFINE_CONDITION1="(TARGET_OS_MACCATALYST || (TARGET_OS_IOS && TARGET_OS_SIMULATOR)) && TARGET_CPU_X86_64"
+        DEFINE_CONDITION2=""
       ;;
       *_tvos_x86_64.h)
         DEFINE_CONDITION1="TARGET_OS_TV && TARGET_OS_SIMULATOR && TARGET_CPU_X86_64"
+        DEFINE_CONDITION2=""
       ;;
       *_tvos_arm64.h)
         DEFINE_CONDITION1="TARGET_OS_TV && TARGET_OS_EMBEDDED && TARGET_CPU_ARM64"
+        DEFINE_CONDITION2=""
       ;;
       *)
         # Don't run into unexpected cases by setting the default condition to false
         DEFINE_CONDITION1="0"
+        DEFINE_CONDITION2=""
       ;;
     esac
 
@@ -536,6 +546,19 @@ if [ ${#OPENSSLCONF_ALL[@]} -gt 1 ]; then
 
     # Add include
     echo "# include <openssl/${OPENSSLCONF_CURRENT}>" >> "${OPENSSLCONF_INTERMEDIATE}"
+
+    if [ ${DEFINE_CONDITION2} ]; then
+      # Determine loopcount; start with if and continue with elif
+      if [ ${LOOPCOUNT} -eq 1 ]; then
+        echo "#if ${DEFINE_CONDITION2}" >> "${OPENSSLCONF_INTERMEDIATE}"
+      else
+        echo "#elif ${DEFINE_CONDITION2}" >> "${OPENSSLCONF_INTERMEDIATE}"
+      fi
+
+      # Add include
+      echo "# include <openssl/${OPENSSLCONF_CURRENT}>" >> "${OPENSSLCONF_INTERMEDIATE}"
+    fi
+
   done
 
   # Finish
