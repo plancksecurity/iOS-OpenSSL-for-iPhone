@@ -494,44 +494,44 @@ if [ ${#OPENSSLCONF_ALL[@]} -gt 1 ]; then
     # Determine define condition
     case "${OPENSSLCONF_CURRENT}" in
       *_ios_x86_64.h)
-        DEFINE_CONDITION="TARGET_OS_IOS && TARGET_OS_SIMULATOR && TARGET_CPU_X86_64"
+        DEFINE_CONDITION1="TARGET_OS_IOS && TARGET_OS_SIMULATOR && TARGET_CPU_X86_64"
       ;;
       *_ios_i386.h)
-        DEFINE_CONDITION="TARGET_OS_IOS && TARGET_OS_SIMULATOR && TARGET_CPU_X86"
+        DEFINE_CONDITION1="TARGET_OS_IOS && TARGET_OS_SIMULATOR && TARGET_CPU_X86"
       ;;
       *_ios_arm64.h)
-        DEFINE_CONDITION="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM64"
+        DEFINE_CONDITION1="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM64"
       ;;
       *_ios_arm64e.h)
-        DEFINE_CONDITION="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM64E"
+        DEFINE_CONDITION1="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM64E"
       ;;
       *_ios_armv7s.h)
-        DEFINE_CONDITION="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM && defined(__ARM_ARCH_7S__)"
+        DEFINE_CONDITION1="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM && defined(__ARM_ARCH_7S__)"
       ;;
       *_ios_armv7.h)
-        DEFINE_CONDITION="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM && !defined(__ARM_ARCH_7S__)"
+        DEFINE_CONDITION1="TARGET_OS_IOS && TARGET_OS_EMBEDDED && TARGET_CPU_ARM && !defined(__ARM_ARCH_7S__)"
       ;;
       *_catalyst_x86_64.h)
-        DEFINE_CONDITION="(TARGET_OS_MACCATALYST || (TARGET_OS_IOS && TARGET_OS_SIMULATOR)) && TARGET_CPU_X86_64"
+        DEFINE_CONDITION1="(TARGET_OS_MACCATALYST || (TARGET_OS_IOS && TARGET_OS_SIMULATOR)) && TARGET_CPU_X86_64"
       ;;
       *_tvos_x86_64.h)
-        DEFINE_CONDITION="TARGET_OS_TV && TARGET_OS_SIMULATOR && TARGET_CPU_X86_64"
+        DEFINE_CONDITION1="TARGET_OS_TV && TARGET_OS_SIMULATOR && TARGET_CPU_X86_64"
       ;;
       *_tvos_arm64.h)
-        DEFINE_CONDITION="TARGET_OS_TV && TARGET_OS_EMBEDDED && TARGET_CPU_ARM64"
+        DEFINE_CONDITION1="TARGET_OS_TV && TARGET_OS_EMBEDDED && TARGET_CPU_ARM64"
       ;;
       *)
         # Don't run into unexpected cases by setting the default condition to false
-        DEFINE_CONDITION="0"
+        DEFINE_CONDITION1="0"
       ;;
     esac
 
     # Determine loopcount; start with if and continue with elif
     LOOPCOUNT=$((LOOPCOUNT + 1))
     if [ ${LOOPCOUNT} -eq 1 ]; then
-      echo "#if ${DEFINE_CONDITION}" >> "${OPENSSLCONF_INTERMEDIATE}"
+      echo "#if ${DEFINE_CONDITION1}" >> "${OPENSSLCONF_INTERMEDIATE}"
     else
-      echo "#elif ${DEFINE_CONDITION}" >> "${OPENSSLCONF_INTERMEDIATE}"
+      echo "#elif ${DEFINE_CONDITION1}" >> "${OPENSSLCONF_INTERMEDIATE}"
     fi
 
     # Add include
